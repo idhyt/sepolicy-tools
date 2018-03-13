@@ -413,13 +413,21 @@ int magiskpolicy_main(int argc, char *argv[]) {
 	if(!infile)
 		infile = SELINUX_POLICY;
 
+#ifdef LOG_DEBUG
+	printf("infile = %s\n", infile);
+#endif
+
 	if (load_policydb(infile)) {
 		fprintf(stderr, "Cannot load policy from %s\n", infile);
 		return 1;
 	}
 
-	if (magisk)
+	if (magisk) {
+#ifdef LOG_DEBUG
+	printf("patch magisk policy\n");
+#endif
 		sepol_magisk_rules();
+	}
 
 	for (int i = 0; i < rules.size; ++i) {
 		// Since strtok will modify the origin string, copy the policy for error messages
@@ -471,8 +479,12 @@ int magiskpolicy_main(int argc, char *argv[]) {
 
 	vec_destroy(&rules);
 
-	if (live)
+	if (live && !outfile)
 		outfile = SELINUX_LOAD;
+	
+#ifdef LOG_DEBUG
+	printf("outfile = %s\n", outfile);
+#endif
 
 	if (outfile && dump_policydb(outfile)) {
 		fprintf(stderr, "Cannot dump policy to %s\n", outfile);

@@ -6,6 +6,8 @@
 
 #include <stdlib.h>
 
+#define LOG_DEBUG
+
 #define ALL NULL
 
 // policydb functions
